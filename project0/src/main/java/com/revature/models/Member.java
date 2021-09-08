@@ -7,4 +7,6 @@ public class Member {
     private int phoneNumber;
     private int fee;
     private boolean isStaff;
+
+    
 }
