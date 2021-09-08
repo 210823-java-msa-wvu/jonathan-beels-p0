@@ -15,3 +15,4 @@
 - Can add books to library
 - Can remove books from library
 - Have the option to login either as a visitor or as staff
+- Can charge overdue fees
