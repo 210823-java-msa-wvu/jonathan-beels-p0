@@ -22,7 +22,7 @@ public class ConnectionUtil {
         }
     }
 
-    public synchronized ConnectionUtil getConnectionUtil() {
+    public static synchronized ConnectionUtil getConnectionUtil() {
         if (cu == null) {
             cu = new ConnectionUtil();
         }

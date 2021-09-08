@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.revature.repositories.BookRepo;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -10,4 +11,11 @@ public class Book {
     private boolean checkedOut;
     private LocalDateTime DueDate;
     private int borrowedBy;
+    private String genre;
+
+    public Book() {
+
+    }
+
+
 }
