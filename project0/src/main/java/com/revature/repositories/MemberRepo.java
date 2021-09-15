@@ -6,28 +6,29 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MemberRepo {
-    private ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
+    ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
 
     // Create
     public Member addMember(Member m) {
         try (Connection conn = cu.getConnection()) {
-            String sql = "insert into Member values (default, ?, ?, ?, ?, ?, ?, ?) returning *";
+            String sql = "insert into members (full_name, address, phone_number, is_staff, fee, user_name, pass_word) values (?, ?, ?, ?, ?, ?, ?) returning *";
 
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, m.getUsername());
-            ps.setString(2, m.getPassword());
-            ps.setString(3, m.getName());
-            ps.setString(4, m.getAddress());
-            ps.setInt(5, m.getPhoneNumber());
-            ps.setInt(6, m.getFee());
-            ps.setBoolean(7, m.getIsStaff());
+            ps.setString(1, m.getName());
+            ps.setString(2, m.getAddress());
+            ps.setString(3, m.getPhoneNumber());
+            ps.setBoolean(4, m.getIsStaff());
+            ps.setInt(5, m.getFee());
+            ps.setString(6, m.getUsername());
+            ps.setString(7, m.getPassword());
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                m.setAccountId(rs.getInt("AccountID"));
+                m.setAccountId(rs.getInt("account_id"));
                 return m;
             }
         } catch (SQLException e) {
@@ -40,7 +41,7 @@ public class MemberRepo {
     // Read
     public Member getById(int id) {
         try (Connection conn = cu.getConnection()) {
-            String sql = "select * from Member where AccountID = ?";
+            String sql = "select * from member where account_id = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
@@ -49,14 +50,14 @@ public class MemberRepo {
 
             if (rs.next()) {
                 Member m = new Member();
-                m.setAccountId(rs.getInt("AccountID"));
-                m.setUsername(rs.getString("UserName"));
-                m.setPassword(rs.getString("PassWord"));
-                m.setName(rs.getString("Name"));
-                m.setAddress(rs.getString("Address"));
-                m.setPhoneNumber(rs.getInt("PhoneNumber"));
-                m.setFee(rs.getInt("Fee"));
-                m.setStaff(rs.getBoolean("IsStaff"));
+                m.setAccountId(rs.getInt("account_id"));
+                m.setUsername(rs.getString("user_name"));
+                m.setPassword(rs.getString("pass_word"));
+                m.setName(rs.getString("full_name"));
+                m.setAddress(rs.getString("address"));
+                m.setPhoneNumber(rs.getString("phone_number"));
+                m.setFee(rs.getInt("fee"));
+                m.setStaff(rs.getBoolean("is_staff"));
 
                 return m;
             }
@@ -69,7 +70,7 @@ public class MemberRepo {
 
     public Member getByLogin(String username, String password) {
         try (Connection conn = cu.getConnection()) {
-            String sql = "select * from Member where UserName = ? and PassWord = ?";
+            String sql = "select * from members where user_name = ? and pass_word = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
@@ -79,14 +80,14 @@ public class MemberRepo {
 
             if (rs.next()) {
                 Member m = new Member();
-                m.setAccountId(rs.getInt("AccountID"));
-                m.setUsername(rs.getString("UserName"));
-                m.setPassword(rs.getString("PassWord"));
-                m.setName(rs.getString("Name"));
-                m.setAddress(rs.getString("Address"));
-                m.setPhoneNumber(rs.getInt("PhoneNumber"));
-                m.setFee(rs.getInt("Fee"));
-                m.setStaff(rs.getBoolean("IsStaff"));
+                m.setAccountId(rs.getInt("account_id"));
+                m.setUsername(rs.getString("user_name"));
+                m.setPassword(rs.getString("pass_word"));
+                m.setName(rs.getString("full_name"));
+                m.setAddress(rs.getString("address"));
+                m.setPhoneNumber(rs.getString("phone_number"));
+                m.setFee(rs.getInt("fee"));
+                m.setStaff(rs.getBoolean("is_staff"));
 
                 return m;
             }
@@ -100,7 +101,7 @@ public class MemberRepo {
     // Update
     public int updateFee(int id, int fee) {
         try (Connection conn = cu.getConnection()) {
-            String sql = "update Member set Fee = ? where AccountID = ? returning Fee";
+            String sql = "update members set fee = ? where account_id = ? returning fee";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, fee);
@@ -109,7 +110,7 @@ public class MemberRepo {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                int newFee = rs.getInt("Fee");
+                int newFee = rs.getInt("fee");
                 return newFee;
             }
         } catch (SQLException e) {

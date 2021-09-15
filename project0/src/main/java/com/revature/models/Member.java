@@ -8,12 +8,12 @@ public class Member {
     private String password;
     private String name;
     private String address;
-    private int phoneNumber;
+    private String phoneNumber;
     private int fee;
     private boolean isStaff;
 
     public Member() {
-        
+
     }
 
     public Member(String username, String password) {
@@ -21,12 +21,20 @@ public class Member {
         this.password = password;
     }
 
-    public boolean login(String username, String password) {
+    public boolean login() {
         MemberRepo repo = new MemberRepo();
 
         Member m = repo.getByLogin(username, password);
 
         if (m.getUsername().equals(username) && m.getPassword().equals(password)) {
+            this.accountId = m.getAccountId();
+            this.username = m.getUsername();
+            this.password = m.getPassword();
+            this.name = m.getName();
+            this.address = m.getAddress();
+            this.phoneNumber = m.getPhoneNumber();
+            this.fee = m.getFee();
+            this.isStaff = m.getIsStaff();
             return true;
         }
 
@@ -34,7 +42,7 @@ public class Member {
     }
 
     public void createNewAccount(String username, String password, String name, String address,
-                                   int phoneNumber) {
+                                   String phoneNumber) {
         MemberRepo repo = new MemberRepo();
 
         this.username = username;
@@ -64,6 +72,13 @@ public class Member {
         this.fee = repo.updateFee(this.accountId, leftover);
 
         return this.fee;
+    }
+
+    public void checkFee() {
+        MemberRepo repo = new MemberRepo();
+
+        Member m = repo.getById(this.accountId);
+        this.fee = m.getFee();
     }
 
     // Getters and Setters
@@ -107,11 +122,11 @@ public class Member {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

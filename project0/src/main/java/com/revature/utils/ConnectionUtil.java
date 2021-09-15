@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionUtil {
-    private static ConnectionUtil cu;
+    private static ConnectionUtil cu =null;
     private static Properties props;
 
     private ConnectionUtil() {
