@@ -41,7 +41,7 @@ public class MemberRepo {
     // Read
     public Member getById(int id) {
         try (Connection conn = cu.getConnection()) {
-            String sql = "select * from member where account_id = ?";
+            String sql = "select * from members where account_id = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);

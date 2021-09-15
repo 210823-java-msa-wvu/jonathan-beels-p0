@@ -2,11 +2,11 @@ package com.revature.views;
 
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.sql.Date;
 import com.revature.models.Book;
 import com.revature.models.Staff;
 import com.revature.repositories.BookRepo;
+import com.revature.utils.NoneOverdueException;
 import com.revature.views.MainMenu;
 
 public class StaffMenu {
@@ -74,9 +74,11 @@ public class StaffMenu {
                     }
                     break;
                 case "4":
+                    MainMenu.m.checkFee();
                     System.out.println("Amount due: $" + MainMenu.m.getFee());
                     break;
                 case "5":
+                    MainMenu.m.checkFee();
                     System.out.println("Amount due: $" + MainMenu.m.getFee());
                     boolean isNum = false;
                     int payment = 0;
@@ -117,9 +119,7 @@ public class StaffMenu {
 
                     if (b == null) {
                         System.out.println("Failed to add book");
-                    }
-
-                    else {
+                    } else {
                         System.out.println("Book added");
                     }
 
@@ -141,32 +141,21 @@ public class StaffMenu {
                             isNum = true;
 
                             success = catalogue.get(bookId).remove();
-                        }   catch (NumberFormatException nfe) {
+                        } catch (NumberFormatException nfe) {
                             System.out.println("Please enter numbers only");
                         }
                     }
 
                     if (success) {
                         System.out.println("Book removed");
-                    }
-                    else {
+                    } else {
                         System.out.println("Book was not removed");
                     }
 
                     break;
                 case "8":
-                    HashMap<Integer, Book> overdue = new HashMap<>();
-                    for (HashMap.Entry<Integer, Book> book : catalogue.entrySet()) {
-                        if (book.getValue().getCheckedOut()) {
-                            overdue.put(book.getKey(), book.getValue());
-                        }
-                    }
-
-                    if (overdue.isEmpty()) {
-                        System.out.println("No books are due");
-                    }
-
-                    else {
+                    try {
+                        HashMap<Integer, Book> overdue = getOverdue(catalogue);
                         for (HashMap.Entry<Integer, Book> book : catalogue.entrySet()) {
                             if (book.getValue().getCheckedOut()) {
                                 System.out.println(book.getValue().toString());
@@ -205,6 +194,9 @@ public class StaffMenu {
                             int fee = s.chargeAccount(days, userId);
                             System.out.println("Account charged $" + fee);
                         }
+
+                    } catch (NoneOverdueException noe) {
+                        System.out.println("Exception Occured: " + noe);
                     }
                     break;
                 case "9":
@@ -224,5 +216,20 @@ public class StaffMenu {
                     System.out.println("Not a valid command");
             }
         }
+    }
+
+    public static HashMap<Integer, Book> getOverdue(HashMap<Integer, Book> catalogue) throws NoneOverdueException {
+        HashMap<Integer, Book> overdue = new HashMap<>();
+        for (HashMap.Entry<Integer, Book> book : catalogue.entrySet()) {
+            if (book.getValue().getCheckedOut()) {
+                overdue.put(book.getKey(), book.getValue());
+            }
+        }
+
+        if (overdue.isEmpty()) {
+            throw new NoneOverdueException("No books are overdue.");
+        }
+
+        return overdue;
     }
 }

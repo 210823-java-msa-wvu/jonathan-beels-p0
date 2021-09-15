@@ -80,6 +80,7 @@ public class MemberMenu {
                     System.out.println("Amount due: $" + MainMenu.m.getFee());
                     break;
                 case "5":
+                    MainMenu.m.checkFee();
                     System.out.println("Amount due: $" + MainMenu.m.getFee());
                     boolean isNum = false;
                     int payment = 0;
